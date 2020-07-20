@@ -12,14 +12,17 @@ class Campus:
         self.__c_desc = school_desc
         self.__terms = list()
 
-    def getCode(self):
+    def get_code(self):
         return self.__c_code
 
-    def getDesc(self):
+    def get_desc(self):
         return self.__c_desc
 
-    def setTerms(self, term_list):
+    def set_terms(self, term_list):
         self.__terms = term_list
+
+    def get_terms(self):
+        return self.__terms
 
 def retrieve_campuses():
     # campuses list endpoint
