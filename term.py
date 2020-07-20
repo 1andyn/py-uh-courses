@@ -13,13 +13,13 @@ class Term:
         self.__t_desc = term_desc
         self.__subs = list()
 
-    def getCode(self):
+    def get_code(self):
         return self.__t_code
 
-    def getDesc(self):
+    def get_desc(self):
         return self.__t_desc
 
-    def setTerms(self, sub_list):
+    def set_terms(self, sub_list):
         self.__subs = sub_list
 
 
@@ -58,5 +58,5 @@ def ret_terms_for_campus(school_code):
 
 def ret_terms_for_list(school_list):
     for s in school_list:
-        termlist = ret_terms_for_campus(s.getCode())  # create term list for school code
-        s.setTerms(termlist)
+        termlist = ret_terms_for_campus(s.get_code())  # create term list for school code
+        s.set_terms(termlist)
