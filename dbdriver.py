@@ -1,15 +1,12 @@
 import pymongo
 import datetime
+import auth
 import dns
 
 
 class Database:
     def __init__(self):
-        f = open("auth", "r")
-        c_pa = f.readline().strip()
-        c_sr = f.readline().strip()
-        c_co = f.readline().strip()
-        client = pymongo.MongoClient("mongodb+srv://" + c_sr + ":" + c_pa + "@" + c_co +
+        client = pymongo.MongoClient("mongodb+srv://" + auth.c_sr + ":" + auth.c_pa + "@" + auth.c_co +
                                      "/arg_react_sch?authSource=admin&retryWrites=true&w=majority")
         self.__mgdbClient = client
         self.__db = client.arg_react_sch
@@ -35,7 +32,6 @@ class Database:
                         "dtmCreated": datetime.datetime.utcnow()})
 
         res = collection.insert_many(doc)
-        print(res)
 
     def insert_terms(self, campus_list):
 
@@ -50,12 +46,22 @@ class Database:
                             "dtmCreated": datetime.datetime.utcnow()})
 
         res = collection.insert_many(doc)
-        print(res)
 
+    def insert_subjects(self, campus_list):
+        collection = self.__db["subjects"]
+        doc = []
 
-    def insert_subjects(self):
-        return
+        for campus in campus_list:
+            for term in campus.get_terms():
+                for sub in term.get_subs():
+                    doc.append({"strSchoolCode": campus.get_code(),
+                                "strTermCode": term.get_code(),
+                                "strTermDesc": term.get_desc(),
+                                "strSubCode" : sub.get_code(),
+                                "strSubDesc" : sub.get_desc(),
+                                "dtmCreated": datetime.datetime.utcnow()})
 
+        res = collection.insert_many(doc)
 
     def insert_courses(self):
         return
