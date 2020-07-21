@@ -34,7 +34,8 @@ def retrieve_campuses():
     r = requests.get(url = URL) #no parameters
 
     if r.status_code < 200 or r.status_code > 299:
-        raise("Unexpected status code: ", r.status_code)
+        print ("Unexpected status code, exiting: " + r.status_code)
+        return
 
     tree = html.fromstring(r.content)
 
