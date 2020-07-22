@@ -179,7 +179,7 @@ class Course:
         self.__other = other
 
     # get room
-    def get_other(self):
+    def get_room(self):
         return self.__room
 
     # set room
