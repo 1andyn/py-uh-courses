@@ -31,6 +31,9 @@ class Subject:
     def get_school(self):
         return self.__term.get_school()
 
+    def get_term(self):
+        return self.__term.get_code()
+
 
 def ret_subs_for_term(term):
     # subjects list endpoint
