@@ -36,6 +36,7 @@ start_time = time.time()
 connection = dbdriver.Database()
 print("[Connect Logic] --- %s seconds ---" % (time.time() - start_time))
 
+"""
 # test insert driver for campus
 start_time = time.time()
 connection.insert_campuses(campus_list)
@@ -46,8 +47,14 @@ start_time = time.time()
 connection.insert_terms(campus_list)
 print("[Insert Term Logic] --- %s seconds ---" % (time.time() - start_time))
 
-# test insert driver for terms
+# test insert driver for subs
 start_time = time.time()
 connection.insert_subjects(campus_list)
-print("[Insert Sub Logic] --- %s seconds ---" % (time.time() - start_time))
+print("[Insert Subs  Logic] --- %s seconds ---" % (time.time() - start_time))
+"""
+
+# test insert driver for terms
+start_time = time.time()
+connection.insert_courses(campus_list)
+print("[Insert Course Logic] --- %s seconds ---" % (time.time() - start_time))
 

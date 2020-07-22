@@ -63,8 +63,47 @@ class Database:
 
         res = collection.insert_many(doc)
 
-    def insert_courses(self):
-        return
+    def insert_courses(self,campus_list):
+        collection = self.__db["courses"]
+        doc = []
+
+        for campus in campus_list:
+            for term in campus.get_terms():
+                for sub in term.get_subs():
+                    for crs in sub.get_courses():
+                        doc.append({"strSchoolCode": campus.get_code(),
+                                    "strTermCode": term.get_code(),
+                                    "strSubCode": sub.get_code(),
+                                    "arrMiscData" : crs.get_misc(),
+                                    "strCRN" : crs.get_crn(),
+                                    "strCourse" : crs.get_course(),
+                                    "strSection" : crs.get_section(),
+                                    "strTitle" : crs.get_course_desc(),
+                                    "strCredits" : crs.get_cred(),
+                                    "strInstr" : crs.get_instruct(),
+                                    "strInstrLong" : crs.get_instructlong(),
+                                    "intEnrollment" : crs.get_enroll(),
+                                    "intSeats" : crs.get_seats(),
+                                    "intWaitlisted" : crs.get_wait(),
+                                    "intWaitAvail" : crs.get_waita(),
+                                    "arrDays" : crs.get_days(),
+                                    "arrDays2" : crs.get_days2(),
+                                    "strRoom" : crs.get_room(),
+                                    "strRoomLong" : crs.get_room_long(),
+                                    "strRoom2" : crs.get_room2(),
+                                    "strRoomLong2" : crs.get_room2_long(),
+                                    "strOther" : crs.get_other(),
+                                    "intTimeStart" : crs.get_start(),
+                                    "intTimeEnd" : crs.get_end(),
+                                    "intTimeStart2" : crs.get_start2(),
+                                    "intTimeEnd2" : crs.get_end2(),
+                                    "strDateStart" : crs.get_startdate(),
+                                    "strDateEnd" : crs.get_enddate(),
+                                    "strDateStart2" : crs.get_startdate2(),
+                                    "strDateEnd2" : crs.get_enddate2(),
+                                    "dtmCreated": datetime.datetime.utcnow()})
+
+        res = collection.insert_many(doc)
 
     def rebuild_campus(self):
         collection = self.__db["campuses"]
@@ -77,3 +116,15 @@ class Database:
         collection.drop()
         rebuilt_col = self.__db["semester"]
         print("Semester table rebuilt")
+
+    def rebuild_subject(self):
+        collection = self.__db["subjects"]
+        collection.drop()
+        rebuilt_col = self.__db["subjects"]
+        print("Subjects table rebuilt")
+
+    def rebuild_subject(self):
+        collection = self.__db["courses"]
+        collection.drop()
+        rebuilt_col = self.__db["courses"]
+        print("Courses table rebuilt")
