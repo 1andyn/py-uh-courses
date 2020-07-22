@@ -60,6 +60,9 @@ def ret_terms_for_campus(school):
         idx = code_string.find("&t")  # extract code from hyperlink
         if idx != - 1:
             code = code_string[idx + 3::]  # starts after &t=
+            #If term is older than 2019, don't parse. This wastes cycles
+            if int(code[0:4]) < 2019:
+                return termlist
             #print(code + " " + termdesc_list[desc_idx])
             termlist.append(Term(code, termdesc_list[desc_idx], school))
             desc_idx += 1
