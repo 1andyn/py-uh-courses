@@ -390,7 +390,8 @@ def ret_courses_for_sub(subject):
 
                 # Course Description
                 if count == 4:
-                    crs.set_course_desc(s.text_content())
+                    title = s.text_content().split(", Restriction:")
+                    crs.set_course_desc(title[0])
 
                 # Credit
                 if count == 5:
@@ -528,8 +529,9 @@ def ret_courses_for_sub(subject):
 
         # Append course to course list
         if not rogue_row and count != 0:
-            course_list.append(crs)
-            prev = crs  # Tracks previous course so we can manipulate it in the scenario that note2 exists
+            if(crs.get_crn() != 0):
+                course_list.append(crs)
+                prev = crs  # Tracks previous course so we can manipulate it in the scenario that note2 exists
 
     """
     for c in course_list:
