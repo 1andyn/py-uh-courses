@@ -103,7 +103,7 @@ class Database:
                                     "strDateEnd2" : crs.get_enddate2(),
                                     "dtmCreated": datetime.datetime.utcnow()})
 
-        res = collection.insert_many(doc)
+        res = collection.insert_many(doc, ordered=False)
 
     def rebuild_campus(self):
         collection = self.__db["campuses"]
@@ -123,7 +123,7 @@ class Database:
         rebuilt_col = self.__db["subjects"]
         print("Subjects table rebuilt")
 
-    def rebuild_subject(self):
+    def rebuild_courses(self):
         collection = self.__db["courses"]
         collection.drop()
         rebuilt_col = self.__db["courses"]
