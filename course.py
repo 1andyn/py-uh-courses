@@ -482,18 +482,18 @@ def ret_courses_for_sub(subject):
                     or count == 11 and len(res) == 13:
 
                 if rogue_row:
-                    prev.set_room2(s.text_content())
+                    prev.set_room2(s.text_content().strip())
                     # Set full room name
                     rm = elt.find_class('abbr')
                     if len(rm) != 0:
-                        prev.set_room2_long(rm[0].attrib['title'])
+                        prev.set_room2_long(rm[0].attrib['title'].strip())
 
                 else:
-                    crs.set_room(s.text_content())
+                    crs.set_room(s.text_content().strip())
                     # Set full room name
                     rm = elt.find_class('abbr')
                     if len(rm) == 2:
-                        crs.set_room_long(rm[1].attrib['title'])
+                        crs.set_room_long(rm[1].attrib['title'].strip())
 
             # 14 or 13 is start / end dates
             if count == 14 and len(res) == 15 \
@@ -506,56 +506,41 @@ def ret_courses_for_sub(subject):
                     # for some reason some courses don't have an end date...
                     if len(dates) == 2:
                         prev.set_enddate2(dates[1] + "/" + year)
+
+                    # if there course has a duplicate row with exact same info as prior row, ignore it
+                    if prev.get_days() == prev.get_days2() and prev.get_start() == prev.get_start2():
+                        prev.set_enddate2("")
+                        prev.set_startdate2("")
+                        prev.set_days2([])
+                        prev.set_start2(0)
+                        prev.set_end2(0)
+                        prev.set_room2_long("")
+                        prev.set_room2("")
+
+
                 else:
                     crs.set_startdate(dates[0] + "/" + year)
                     if len(dates) == 2:
                         crs.set_enddate(dates[1] + "/" + year)
 
-            """
-            # Edge Case: Manoa classes are putting notes at the beginning on a separate TR
-            for a in note:  # finds all note elements with "section comment", appears to be used by UH Manoa
-                print(a.text_content().strip())
-            """
             count += 1
-
-        """
-        # Edge Case: Honolulu Community College puts notes at end with TD COLSPAN 13 on a separate TR
-        note2 = elt.findall('.//td[@colspan="13"]')
-        for b in note2:
-            # Hard coded replacement logic since the formatting is just a <br> tag..
-            print(b.text_content().strip())
-            note_end = b.text_content().strip()
-        """
 
         # Append course to course list
         if not rogue_row and count != 0:
-            if(crs.get_crn() != 0):
+            if crs.get_crn() != 0:
                 course_list.append(crs)
                 prev = crs  # Tracks previous course so we can manipulate it in the scenario that note2 exists
-
-    """
-    for c in course_list:
-        c.print_course()
-        print("---")
-    """
-
-    # print("Courses built: " + str(len(course_list)))
 
     return course_list
 
 
 def ret_courses_for_schools(school_list):
     """
-    1 thread = 30 sec
-    4 threads = 9 sec
-    8 threads = 6 sec
-    16 threads = 3.5 sec
-    32 threads = 2.8 sec [magic number?]
-    64 threads = 3.8 sec
+    32 threads = 61 sec [magic number?]
     """
     with concurrent.futures.ThreadPoolExecutor(max_workers=32) as executor:
         future_courselist = {executor.submit(ret_courses_for_sub, u): u
-                           for s in school_list for t in s.get_terms()
-                           for u in t.get_subs()}
+                             for s in school_list for t in s.get_terms()
+                             for u in t.get_subs()}
         for future in concurrent.futures.as_completed(future_courselist):
             future_courselist[future].set_courses(future.result())
