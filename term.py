@@ -4,7 +4,7 @@ Term (Semester) object
 
 """
 import concurrent.futures
-
+import datetime
 import requests  # importing the requests library
 from lxml import html
 
@@ -53,6 +53,8 @@ def ret_terms_for_campus(school):
     for elt in tree.xpath('//li'):
         termdesc_list.append(elt.text_content().strip().replace("\n", ""))
 
+    now = datetime.datetime.now()
+
     # get term codes
     desc_idx = 0
     for elt in tree.xpath('//a'):
@@ -60,8 +62,8 @@ def ret_terms_for_campus(school):
         idx = code_string.find("&t")  # extract code from hyperlink
         if idx != - 1:
             code = code_string[idx + 3::]  # starts after &t=
-            #If term is older than 2019, don't parse. This wastes cycles
-            if int(code[0:4]) < 2019:
+            #If term is older than current year - 1, don't parse. This wastes cycles
+            if int(code[0:4]) < now.year - 1:
                 return termlist
             #print(code + " " + termdesc_list[desc_idx])
             termlist.append(Term(code, termdesc_list[desc_idx], school))
